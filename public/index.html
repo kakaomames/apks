@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Home</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    <meta name="theme-color" content="#317EFB">
+    <style>
+        .app-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .app-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>PWAホーム画面</h1>
+    <p>これはPWAのメインページです。</p>
+    <ul>
+        <li><a href="/upload">新しいアプリをアップロード</a></li>
+        </ul>
+
+    <h2>インストール済みアプリ</h2>
+    <div id="installedApps">
+        <div class="app-item" data-app-name="SampleApp" data-app-version="1.0.0">
+            <h3>SampleApp (v1.0.0)</h3>
+            <p>クリックしてアプリを実行</p>
+        </div>
+        </div>
+
+
+    <h2>外部サイトへのリクエストテスト</h2>
+    <p>GitHub以外のサイトへcurlコマンドでリクエストを送信します。</p>
+    <form id="externalFetchForm">
+        <label for="externalUrl">URL:</label>
+        <input type="text" id="externalUrl" value="https://example.com" size="50">
+        <button type="submit">リクエスト送信</button>
+    </form>
+    <pre id="externalResponse"></pre>
+
+    <script>
+        // Service Workerの登録 (変更なし)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker 登録成功:', registration);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker 登録失敗:', error);
+                    });
+            });
+        }
+
+        // 外部サイトリクエストのフォームハンドリング (変更なし)
+        document.getElementById('externalFetchForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const urlInput = document.getElementById('externalUrl');
+            const responsePre = document.getElementById('externalResponse');
+            const targetUrl = encodeURIComponent(urlInput.value);
+
+            try {
+                const response = await fetch(`/fetch-external?url=${targetUrl}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    responsePre.textContent = `エラー: ${response.status} ${response.statusText}\n${errorText}`;
+                } else {
+                    const text = await response.text();
+                    responsePre.textContent = text;
+                }
+            } catch (error) {
+                responsePre.textContent = `通信エラー: ${error.message}`;
+            }
+        });
+
+        // アプリアイテムのクリックハンドリング
+        document.getElementById('installedApps').addEventListener('click', (event) => {
+            const appItem = event.target.closest('.app-item');
+            if (appItem) {
+                const appName = appItem.dataset.appName;
+                const appVersion = appItem.dataset.appVersion;
+                if (appName && appVersion) {
+                    window.location.href = `/app?n=${encodeURIComponent(appName)}&v=${encodeURIComponent(appVersion)}`;
+                }
+            }
+        });
+
+        // インストール後のリダイレクト (install.html からのリダイレクトを処理)
+        // 例えば、インストール完了後にセッションストレージなどにフラグを設定し、
+        // ホーム画面ロード時にフラグがあればメッセージ表示後クリア、といった処理
+        const installSuccess = sessionStorage.getItem('installSuccess');
+        if (installSuccess) {
+            alert(`アプリ「${installSuccess}」のインストールが完了しました！`);
+            sessionStorage.removeItem('installSuccess');
+        }
+    </script>
+</body>
+</html>
