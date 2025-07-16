@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run App</title>
+</head>
+<body>
+    <h1>アプリ実行画面</h1>
+    <p>実際にアプリが実行される場所です。</p>
+    <p id="appRunInfo"></p>
+    <a href="/">ホームに戻る</a>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const appName = urlParams.get('n');
+        const appVersion = urlParams.get('v');
+        if (appName && appVersion) {
+            document.getElementById('appRunInfo').textContent = `実行中のアプリ: ${appName}, バージョン: ${appVersion}`;
+        } else {
+            document.getElementById('appRunInfo').textContent = `実行するアプリの情報が見つかりません。`;
+        }
+    </script>
+</body>
+</html>
