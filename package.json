@@ -1,0 +1,13 @@
+{
+  "name": "pwa-app-server",
+  "version": "1.0.0",
+  "description": "A PWA application server with specific routing and external request handling.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^2.6.1" // ★ 追加 (または @octokit/rest など)
+  }
+}
