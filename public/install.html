@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install App</title>
+</head>
+<body>
+    <h1>アプリインストール画面</h1>
+    <p>インストールプロセスがここに表示されます。</p>
+    <p id="appInfo"></p>
+    <div id="installProgress">インストール中...</div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const appName = urlParams.get('n');
+        const appVersion = urlParams.get('v');
+        const appInfoElement = document.getElementById('appInfo');
+        const installProgressElement = document.getElementById('installProgress');
+
+        if (appName && appVersion) {
+            appInfoElement.textContent = `アプリ名: ${appName}, バージョン: ${appVersion}`;
+            // ここで実際のインストール処理をトリガーすることも可能ですが、今回はシミュレーション
+            setTimeout(() => {
+                installProgressElement.textContent = `アプリ「${appName}」のインストールが完了しました！`;
+                // インストール完了フラグをセッションストレージに設定
+                sessionStorage.setItem('installSuccess', appName);
+                // 3秒後にホーム画面へリダイレクト
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 3000);
+            }, 5000); // 5秒後にインストール完了をシミュレーション
+        } else {
+            appInfoElement.textContent = `インストールするアプリの情報が見つかりません。`;
+            installProgressElement.style.display = 'none'; // プログレス表示を非表示に
+        }
+    </script>
+</body>
+</html>
