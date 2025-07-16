@@ -10,9 +10,8 @@
     <p>APKまたはAPKSファイルをアップロードしてください。</p>
 
     <form action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="appFiles">アプリファイル:</label>
-        <input type="file" id="appFiles" name="appFiles" accept=".apk,.apks" multiple required>
-        <br><br>
+        <label for="appFile">アプリファイル:</label>
+        <input type="file" id="appFile" name="appFile" accept=".apk,.apks" required> <br><br>
         <button type="submit">アップロード</button>
     </form>
 
